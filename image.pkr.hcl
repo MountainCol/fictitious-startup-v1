@@ -20,7 +20,7 @@ variable "vpc_id" {}
 
 locals {
     ami_name            = "cloudtalents-startup "
-    source_ami_name     = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*
+    source_ami_name     = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*"
     source_ami_owner    = ["099720109477"]
     ssh_username        = "ec2-user"
 }
