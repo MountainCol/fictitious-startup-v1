@@ -19,8 +19,8 @@ variable "version" {}
 variable "vpc_id" {}
 
 locals {
-    ami_name            = "cloudtalents-startup "
-    source_ami_name     = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*"
+    ami_name            = "cloudtalents-startup"
+    source_ami_name     = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"
     source_ami_owner    = ["099720109477"]
     ssh_username        = "ec2-user"
 }
@@ -55,7 +55,7 @@ build {
     }
 
     post-processor "amazon-ami-management' {
-        regions         = ["eu-west-1]
+        regions         = ["eu-west-1"]
         identifier      = local.ami_name
         keep_releases   = 2
     }
