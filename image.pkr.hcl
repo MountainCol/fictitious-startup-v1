@@ -26,7 +26,37 @@ locals {
 }
 
 source "amazon-ebs" "amazon-linux" {
-    ami_name    = ${local.ami_name"}-${var.version}"
-    
+    ami_name            = ${local.ami_name"}-${var.version}"
+    instance_type       = "t2.micro"
+    region              = "eu-west-1"
+    source_ami_filter {
+        filters = {
+            name                = local.source_ami_name
+            root_device_type    = "ebs"
+            virtualisation-type = "hmv" 
+        }
+        most_recent     = true
+        owners          = local.source_ami_owners
+    }
+    ssh_username                = local.ssh.ssh_username    
+    vpc_id                      = var.vpc_id
+    subnet_id                   = var.subnet_id
+    associate_public_ip_address = true
+}
 
+build {
+    name        = "base_image"
+    sources     = [
+        "sources.amazon-ebs.amazon-linux
+    ]
+
+    provisioner "shell" {
+        script = "setup.sh"
+    }
+
+    post-processor "amazon-ami-management' {
+        regions         = ["eu-west-1]
+        identifier      = local.ami_name
+        keep_releases   = 2
+    }
 }
