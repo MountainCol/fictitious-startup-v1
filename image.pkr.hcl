@@ -38,10 +38,10 @@ source "amazon-ebs" "amazon-linux" {
         most_recent     = true
         owners          = local.source_ami_owners
     }
-    ssh_username                = local.ssh.ssh_username    
-    vpc_id                      = var.vpc_id
-    subnet_id                   = var.subnet_id
-    associate_public_ip_address = true
+    ssh_username                    = local.ssh.ssh_username    
+    vpc_id                          = var.vpc_id
+    subnet_id                       = var.subnet_id
+    associate_public_ip_address     = true
 }
 
 build {
@@ -52,6 +52,10 @@ build {
 
     provisioner "shell" {
         script = "setup.sh"
+    }
+
+    provisioner "shell" {
+        script = remote_folder 
     }
 
     post-processor "amazon-ami-management' {
