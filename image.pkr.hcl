@@ -1,7 +1,7 @@
 packer {
     required_plugin = {
         amazon = {
-            version = ">+1.2.8"
+            version = ">=1.2.8"
             source  = ""github.com/hashicorp/amazon"
         }
     }
@@ -22,11 +22,11 @@ locals {
     ami_name            = "cloudtalents-startup"
     source_ami_name     = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"
     source_ami_owner    = ["099720109477"]
-    ssh_username        = "ec2-user"
+    ssh_username        = "ubuntu"
 }
 
 source "amazon-ebs" "amazon-linux" {
-    ami_name            = ${local.ami_name"}-${var.version}"
+    ami_name            = "${local.ami_name"}-${var.version}"
     instance_type       = "t2.micro"
     region              = "eu-west-1"
     source_ami_filter {
@@ -47,16 +47,27 @@ source "amazon-ebs" "amazon-linux" {
 build {
     name        = "base_image"
     sources     = [
-        "sources.amazon-ebs.amazon-linux
+        "sources.amazon-ebs.amazon-linux"
     ]
+
+    provisioner "file" {
+        source =  "./"
+        destination = "/tmp" 
+    }
+
+    provisioner "shell" {
+        inline = [
+            "echo Moving files..."
+            "sudo mkdir -p /opt/app",
+            "sudo mv /tmp/* /opt/app",
+            "sudo chmod +x /opt/app/setup.sh"
+        ]
+    }
 
     provisioner "shell" {
         script = "setup.sh"
     }
 
-    provisioner "shell" {
-        script = remote_folder 
-    }
 
     post-processor "amazon-ami-management' {
         regions         = ["eu-west-1"]
