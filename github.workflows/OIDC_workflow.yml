@@ -20,13 +20,6 @@ jobs:
           terraform_version: "1.7.x"
           cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}      
          
-      - name: Configure AWS Credentials for Ireland region audience
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          audience: sts.amazonaws.com
-          aws-region: eu-west-1
-          role-to-assume: ${{ secrets.PACKER_ROLE }}
-
       - name: init with token
         run: terraform init -backend-config="token=${{ secrets.TFC_TOKEN }}"
          
