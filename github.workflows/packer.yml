@@ -1,47 +1,22 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: Apache-2.0
 
-name: packer
+---
 
-on:
-  - push
-
-jobs:
-  packer:
-    runs-on: ubuntu-latest
-    name: Run Packer
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup `packer`
-        uses: hashicorp/setup-packer@main
-        id: setup
-        with:
-          version: "1.10.0" # or latest
-
-      - name: Run `packer init`
-        id: init
-        run: "packer init ./image.pkr.hcl"
-
-      - name: Run `packer validate`
-        id: validate
-        run: "packer validate ./image.pkr.hcl"
-
-      - name: Script for secrets
-        run: |
-          sudo cat > secrets.sh <<EOF
-          #!/bin/bash
-          export SECRET_KEY='${{ secrets.SECRET_KEY }}'
-          export DB_USER='${{ secrets.DB_USER }}'
-          export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
-          EOF
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: ${{ secrets.PACKER_ROLE }}
-      
-      - name: Run "packer build"
-        run: packer build -color-false -on-error-abort -var "vpc_id=${{ secrets.VPC_ID}}" -var "subnet_id=${{ secrets.SUBNET_ID}}" -var "version=${{ github.ref_name}}" ./image.pkr.hcl 
+name: "Setup HashiCorp Packer"
+author: "Kerim Satirli"
+description: "A GitHub Action to install a specific version of HashiCorp Packer and add it to PATH."
+inputs:
+  version:
+    description: "The Packer version to install and add to PATH."
+    required: true
+    default: "latest"
+outputs:
+  version:
+    description: "The Packer version that was installed and added to PATH."
+runs:
+  using: "node20"
+  main: "dist/index.js"
+branding:
+  icon: "package"
+  color: "blue"
