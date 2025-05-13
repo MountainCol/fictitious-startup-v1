@@ -1,0 +1,41 @@
+name: Cloud Talents Startup 
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+      
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.x"
+          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}      
+         
+      - name: Configure AWS Credentials for Ireland region audience
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: eu-west-1
+          role-to-assume: ${{ secrets.PACKER_ROLE }}
+
+      - name: init with token
+        run: terraform init -backend-config="token=${{ secrets.TFC_TOKEN }}"
+         
+      - name: apply
+        run: terraform apply -auto-approve
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          role-to-assume: ${{ secrets.PACKER_ROLE }}
+          aws-region: ${{ secrets.REGION }}
