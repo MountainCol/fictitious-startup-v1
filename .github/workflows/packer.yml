@@ -1,22 +1,29 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: Apache-2.0
+name: packer
 
----
+on:
+  push:
 
-name: "Setup HashiCorp Packer"
-author: "Kerim Satirli"
-description: "A GitHub Action to install a specific version of HashiCorp Packer and add it to PATH."
-inputs:
-  version:
-    description: "The Packer version to install and add to PATH."
-    required: true
-    default: "latest"
-outputs:
-  version:
-    description: "The Packer version that was installed and added to PATH."
-runs:
-  using: "node20"
-  main: "dist/index.js"
-branding:
-  icon: "package"
-  color: "blue"
+env:
+  PRODUCT_VERSION: "1.10.0" # or: "latest"
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+    name: Run Packer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: ${{ env.PRODUCT_VERSION }}
+
+      - name: Run `packer init`
+        id: init
+        run: "packer init ./image.pkr.hcl"
+
+      - name: Run `packer validate`
+        id: validate
+        run: "packer validate ./image.pkr.hcl"

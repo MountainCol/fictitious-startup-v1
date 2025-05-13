@@ -68,7 +68,6 @@ build {
         script = "setup.sh"
     }
 
-
     post-processor "amazon-ami-management' {
         regions         = ["eu-west-1"]
         identifier      = local.ami_name
