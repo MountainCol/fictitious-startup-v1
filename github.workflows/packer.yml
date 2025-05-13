@@ -41,7 +41,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: ${{ secrets.ROLE }}
+          role-to-assume: ${{ secrets.PACKER_ROLE }}
       
       - name: Run "packer build"
         run: packer build -color-false -on-error-abort -var "vpc_id=${{ secrets.VPC_ID}}" -var "subnet_id=${{ secrets.SUBNET_ID}}" -var "version=${{ github.ref_name}}" ./image.pkr.hcl 
