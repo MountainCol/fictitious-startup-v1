@@ -5,6 +5,10 @@ on:
     branches: [ main ]
   pull_request:
 
+env:
+  AWS_REGION: "eu-west-1"
+  PACKER_VERSION: "latest"
+
 permissions:
   contents: read
   id-token: write
@@ -14,17 +18,21 @@ jobs:
     runs-on: ubuntu-latest
       
     steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+      - name: Repositiry Checkout
+        uses: actions/checkout@v4
+      - name:
+        uses: hashicorp/setup-packer@main
+        id: setup
         with:
-          terraform_version: "1.7.x"
-          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}      
+          version: ${{ env.PACKER_VERSION }}
+        
          
-      - name: init with token
+      - name: Packer init
         run: terraform init -backend-config="token=${{ secrets.TFC_TOKEN }}"
          
       - name: apply
-        run: terraform apply -auto-approve
+        id: init
+        run: "packer init ./image.pkr.hcl"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -32,3 +40,6 @@ jobs:
           audience: sts.amazonaws.com
           role-to-assume: ${{ secrets.PACKER_ROLE }}
           aws-region: ${{ secrets.REGION }}
+
+      - name: Run "packer build"
+        run: packer build -on-error=abort -var "vpc_id=${{ var.vpc_id }}" -var "subnet_id=${{ var.subnet_id }}" -var "version=${{ var.version }}" ./image.pkr.hcl
