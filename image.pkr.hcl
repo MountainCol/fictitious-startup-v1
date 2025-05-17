@@ -1,10 +1,10 @@
 packer {
-    required_plugins = {
-        amazon = {
-            version = ">=1.2.8"
-            source  = "github.com/hashicorp/amazon"
-        }
+  required_plugins {
+    amazon = {
+      version = ">= 1.0.0"
+      source  = "github.com/hashicorp/amazon"
     }
+  }
 }
 
 variable "subnet_id" {}
