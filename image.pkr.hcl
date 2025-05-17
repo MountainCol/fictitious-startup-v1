@@ -26,22 +26,25 @@ locals {
 }
 
 source "amazon-ebs" "ubuntu" {
-    ami_name            = "${local.ami_name"}-${var.version}"
-    instance_type       = "t2.micro"
-    region              = "eu-west-1"
+    ami_name        = "${local.ami_name}-${var.version}"
+    instance_type   = "t2.micro"
+    region          = "eu-west-1"
     source_ami_filter {
         filters = {
-            name                = local.source_ami_name
-            root_device_type    = "ebs"
-            virtualisation-type = "hmv" 
+            name                    = local.source_ami_name
+            root-device-type        = "ebs"
+            virtualisation-type     = "hmv"
         }
         most_recent     = true
-        owners          = local.source_ami_owners
+        owners          = local.source_ami_owner
     }
-    ssh_username                    = local.ssh_username    
-    vpc_id                          = var.vpc_id
-    subnet_id                       = var.subnet_id
+    ssh_username        = local.ssh_username
+    vpc_id              = var.vpc_id
+    subnet_id           = var.subnet.id
     associate_public_ip_address     = true
+    tags = {
+        Amazon_AMI_Management_Identifier = local.ami_name
+    }
 }
 
 build {
@@ -49,12 +52,10 @@ build {
     sources     = [
         "source.amazon-ebs.ubuntu"
     ]
-
     provisioner "file" {
         source =  "./"
         destination = "/tmp" 
     }
-
     provisioner "shell" {
         inline = [
             "echo Moving files..."
@@ -63,14 +64,13 @@ build {
             "sudo chmod +x /opt/app/setup.sh"
         ]
     }
-
     provisioner "shell" {
         script = "setup.sh"
     }
-
-    post-processor "amazon-ami-management' {
+    post-processor "amazon-ami-management" {
         regions         = ["eu-west-1"]
         identifier      = local.ami_name
         keep_releases   = 2
     }
+
 }
