@@ -1,12 +1,12 @@
 packer {
-    required_plugin = {
+    required_plugins = {
         amazon = {
             version = ">=1.2.8"
             source  = "github.com/hashicorp/amazon"
         }
     }
 
-    required_plugin = {
+    required_plugins = {
         amazon-ami-management = {
             version = ">=1.0.0"
             source  = "github.com/wata727/amazon-ami-management"
@@ -58,7 +58,7 @@ build {
     }
     provisioner "shell" {
         inline = [
-            "echo Moving files..."
+            "echo Moving files...",
             "sudo mkdir -p /opt/app",
             "sudo mv /tmp/* /opt/app",
             "sudo chmod +x /opt/app/setup.sh"
