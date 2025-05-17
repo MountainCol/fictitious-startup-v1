@@ -22,6 +22,5 @@ variable "version" {
     default     = "cloudtalents-startup-v1.0.0"
     description = "version required variable"
     sensitive   = false
-    # When a variable is sensitive all string-values from that variable will be
-    # obfuscated from Packer's output.
+    
 }

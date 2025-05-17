@@ -25,7 +25,7 @@ locals {
     ssh_username        = "ubuntu"
 }
 
-source "amazon-ebs" "amazon-linux" {
+source "amazon-ebs" "ubuntu" {
     ami_name            = "${local.ami_name"}-${var.version}"
     instance_type       = "t2.micro"
     region              = "eu-west-1"
@@ -38,16 +38,16 @@ source "amazon-ebs" "amazon-linux" {
         most_recent     = true
         owners          = local.source_ami_owners
     }
-    ssh_username                    = local.ssh.ssh_username    
+    ssh_username                    = local.ssh_username    
     vpc_id                          = var.vpc_id
     subnet_id                       = var.subnet_id
     associate_public_ip_address     = true
 }
 
 build {
-    name        = "base_image"
+    name        = "custom_ami"
     sources     = [
-        "sources.amazon-ebs.amazon-linux"
+        "source.amazon-ebs.ubuntu"
     ]
 
     provisioner "file" {

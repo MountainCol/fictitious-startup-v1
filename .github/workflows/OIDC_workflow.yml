@@ -9,6 +9,7 @@ env:
   AWS_REGION: "eu-west-1"
   PACKER_VERSION: "latest"
 
+
 permissions:
   contents: read
   id-token: write
@@ -20,7 +21,7 @@ jobs:
     steps:
       - name: Repositiry Checkout
         uses: actions/checkout@v4
-      - name:
+      - name: Packer version
         uses: hashicorp/setup-packer@main
         id: setup
         with:
@@ -42,4 +43,4 @@ jobs:
           aws-region: ${{ secrets.REGION }}
 
       - name: Run "packer build"
-        run: packer build -on-error=abort -var "vpc_id=${{ var.vpc_id }}" -var "subnet_id=${{ var.subnet_id }}" -var "version=${{ var.version }}" ./image.pkr.hcl
+        run: packer build -on-error=abort -var "vpc_id=${{ vars.vpc_id }}" -var "subnet_id=${{ vars.subnet_id }}" -var "version=${{ vars.version }}" ./image.pkr.hcl

@@ -20,5 +20,4 @@ resource "aws_security_group" "allow_http" {
     name        = "allow_http"
     description = "Allow HTTP inbound traffic and all outbound traffic"
     vpc_id      = data.terraform_remote_state.source.outputs.vpc_id
-
 }
