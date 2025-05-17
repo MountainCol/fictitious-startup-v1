@@ -6,11 +6,21 @@ packer {
     }
   }
 }
+variable "subnet_id" {
+  type        = string
+  description = "The ID of the subnet."
+}
 
 
-variable "subnet_id" {}
-variable "version" {}
-variable "vpc_id" {}
+variable "version" {
+    type        = string
+    description = "The version of packerthat is used to make the image"
+}
+
+variable "vpc_id" {
+    type        = string
+    description = "The id of the VPC used"
+}
 
 locals {
     ami_name            = "cloudtalents-startup"
