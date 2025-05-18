@@ -3,8 +3,6 @@ name: packer
 on:
   push:
 
-
-
 jobs:
   packer:
     runs-on: ubuntu-latest
@@ -29,6 +27,19 @@ jobs:
           packer validate \
             -var "subnet_id=${{ secrets.SUBNET_ID }}" \
             -var "vpc_id=${{ secrets.VPC_ID}}" \
-            -var "version=${{ secrets.PRODUCT_VERSION }}"\
+            -var "version=${{ secrets.PRODUCT_VERSION }}" \
           ./image.pkr.hcl
-  
+      
+      - name: Build Packer Image
+        run: |
+          packer build -on-error=abort \
+            -var "vpc_id=${{ secrets.VPC_ID }}"
+            -var "subnet_id=${{ secrets.SUBNET_ID }}"
+            -var "version=${{ secrets.PRODUCT_VERSION }}"
+            ./image.pkr.hcl
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_KEY }}
+          AWS_SESSION_TOKEN:  ${{ secrets.AWS_SESSION_TOKEN }}
