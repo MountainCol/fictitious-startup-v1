@@ -6,15 +6,15 @@ packer {
     }
   }
 }
+
 variable "subnet_id" {
   type        = string
   description = "The ID of the subnet."
 }
 
-
 variable "version" {
     type        = string
-    description = "The version of packerthat is used to make the image"
+    description = "The version of packer that is used to make the image"
 }
 
 variable "vpc_id" {
