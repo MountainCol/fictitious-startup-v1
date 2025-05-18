@@ -25,12 +25,7 @@ jobs:
         uses: hashicorp/setup-packer@main
         id: setup
         with:
-          version: ${{ env.PACKER_VERSION }}
-        
-         
-      - name: Packer init
-        run: terraform init -backend-config="token=${{ secrets.TFC_TOKEN }}"
-         
+          version: ${{ env.PACKER_VERSION }}         
       - name: apply
         id: init
         run: "packer init ./image.pkr.hcl"
