@@ -43,4 +43,4 @@ jobs:
           aws-region: ${{ secrets.REGION }}
 
       - name: Run "packer build"
-        run: packer build -on-error=abort -var "vpc_id=${{ vars.vpc_id }}" -var "subnet_id=${{ vars.subnet_id }}" -var "version=${{ vars.version }}" ./image.pkr.hcl
+        run: packer build -on-error=abort -var "vpc_id=${{ secrets.VPC_ID }}" -var "subnet_id=${{ secrets.SUBNET_ID }}" -var "version=${{ secrets.PRODUCT_VERSION }}" ./image.pkr.hcl

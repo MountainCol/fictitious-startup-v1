@@ -11,21 +11,6 @@ packer {
   }
 }
 
-variable "subnet_id" {
-  type        = string
-  description = "The ID of the subnet."
-}
-
-variable "version" {
-    type        = string
-    description = "The version of packer that is used to make the image"
-}
-
-variable "vpc_id" {
-    type        = string
-    description = "The id of the VPC used"
-}
-
 locals {
     ami_name            = "cloudtalents-startup"
     source_ami_name     = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"

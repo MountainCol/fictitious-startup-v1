@@ -3,8 +3,7 @@ name: packer
 on:
   push:
 
-env:
-  PRODUCT_VERSION: "latest" # or: "latest"
+
 
 jobs:
   packer:
@@ -31,5 +30,5 @@ jobs:
             - var "subnet_id=${{ secrets.SUBNET_ID }}" \
             - var "vpc_id=${{ secrets.VPC_ID}}" \
             - var "version=${{ secrets.PRODUCT_VERSION }}"\
-            ./image.pkr.hcl
+          ./image.pkr.hcl
   
