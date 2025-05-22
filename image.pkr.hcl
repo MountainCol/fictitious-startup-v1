@@ -33,7 +33,7 @@ source "amazon-ebs" "ubuntu" {
     }
     ssh_username        = local.ssh_username
     vpc_id              = var.vpc_id
-    subnet_id           = var.subnet.id
+    subnet_id           = var.subnet_id.id
     associate_public_ip_address     = true
     tags = {
         Amazon_AMI_Management_Identifier = local.ami_name
