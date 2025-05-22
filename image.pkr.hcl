@@ -43,20 +43,18 @@ source "amazon-ebs" "ubuntu" {
 variable "subnet_id" {
   type        = string
   description = "The subnet ID to launch the instance in"
-  default     = subnet_id=${{ secrets.SUBNET_ID }} 
-}
+}  
 
 variable "vpc_id" {
   type        = string
-  description = "The VPC ID to launch the instance in"
-  default     = vpc_id=${{ secrets.VPC_ID }}  
+  description = "The VPC ID to launch the instance in"  
 }
 
 variable "version" {
   type        = string
-  description = "Version of the AMI to build"
-  default     = version=${{ secrets.PRODUCT_VERSION }} 
+  description = "Version of the AMI to build" 
 }
+
 build {
     name        = "custom_ami"
     sources     = [
