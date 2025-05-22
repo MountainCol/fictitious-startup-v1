@@ -32,6 +32,11 @@ jobs:
       
       - name: Build Packer Image
         run: |
+          if [[ -z "${{ secrets.VPC_ID }}" || -z "${{ secrets.SUBNET_ID }}" || -z "${{ secrets.PRODUCT_VERSION }}" ]]; then
+            echo "Error: Missing required secrets (VPC_ID, SUBNET_ID, or PRODUCT_VERSION)." >&2
+            exit 1
+          fi
+          
           echo "VPC ID: ${{ secrets.VPC_ID }}"
           echo "Subnet ID: ${{ secrets.SUBNET_ID }}"
           echo "Product Version: ${{ secrets.PRODUCT_VERSION }}"
