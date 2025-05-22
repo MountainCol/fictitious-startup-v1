@@ -32,6 +32,9 @@ jobs:
       
       - name: Build Packer Image
         run: |
+          echo "VPC ID: ${{ secrets.VPC_ID }}"
+          echo "Subnet ID: ${{ secrets.SUBNET_ID }}"
+          echo "Product Version: ${{ secrets.PRODUCT_VERSION }}"
           packer build -on-error=abort \
             -var "vpc_id=${{ secrets.VPC_ID }}"
             -var "subnet_id=${{ secrets.SUBNET_ID }}"
