@@ -19,7 +19,7 @@ jobs:
 
       - name: Run `packer init`
         id: init
-        run: "packer init ./image.pkr.hcl"
+        run: packer init ./image.pkr.hcl
 
       - name: Run `packer validate`
         id: validate
