@@ -26,7 +26,7 @@ source "amazon-ebs" "ubuntu" {
         filters = {
             name                    = local.source_ami_name
             root-device-type        = "ebs"
-            virtualization-type     = ["hvm"]
+            virtualization-type     = "hvm"
         }
         most_recent     = true
         owners          = local.source_ami_owner
