@@ -23,7 +23,7 @@ jobs:
 
       - name: Run `packer validate`
         id: validate
-        run: 
+        run: |
           packer validate \
             -var "subnet_id=${{ secrets.SUBNET_ID }}" \
             -var "vpc_id=${{ secrets.VPC_ID}}" \
