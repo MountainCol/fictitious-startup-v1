@@ -3,6 +3,10 @@ name: packer
 on:
   push:
 
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   packer:
     runs-on: ubuntu-latest
@@ -27,7 +31,7 @@ jobs:
           audience: sts.amazonaws.com
           role-to-assume: ${{ secrets.PACKER_ROLE }}
           aws-region: ${{ secrets.REGION }}
-          
+
       - name: Run `packer validate`
         id: validate
         run: |
