@@ -32,11 +32,11 @@ jobs:
       
       - name: Build Packer Image
         run: |
-          if [[ -z "${{ secrets.VPC_ID }}"]]; then
+          if [[ -z "${{ secrets.VPC_ID }}" ]]; then
           echo "Error: Missing secret VPC_ID." >&2
           exit 1
           fi
-          
+
           if [[ -z "${{ secrets.SUBNET_ID }}" ]]; then
           echo "Error: Missing secret SUBNET_ID." >&2
           exit 1
