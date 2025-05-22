@@ -19,8 +19,17 @@ sudo chown -v ubuntu $APP_DIR
 # 
 # Relevant link: https://ubuntu.com/server/docs/package-management
 #################################################################################################
-sudo apt install -y
-sudo apt install -y python3.pip python3-venv postgresql postgresql-contrib nginx
+# Correct Python packages
+sudo apt update
+sudo apt install -y python3-pip python3-venv
+
+# Install PostgreSQL
+sudo apt install -y postgresql
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Ensure the 'postgres' user exists
+sudo -u postgres psql -c "SELECT 1;"
 
 #################################################################################################
 # Start and enable the PostgreSQL service
@@ -129,7 +138,7 @@ EOF
 sudo mv /tmp/nginx_config /etc/nginx/sites-available/cloudtalents
 
 # Enable and test the Nginx configuration
-sudo ln -s /etc/nginx/sites-available/cloudtalents /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/cloudtalents /etc/nginx/sites-enabled/
 sudo nginx -t
 
 #################################################################################################
@@ -137,7 +146,7 @@ sudo nginx -t
 #
 # Relevant link: https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
 #################################################################################################
-sudo systemctl reload /etc/nginx.service
+sudo systemctl restart nginx
 
 #################################################################################################
 # Allow traffic to port 80 using ufw
