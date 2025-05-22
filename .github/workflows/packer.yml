@@ -20,7 +20,14 @@ jobs:
       - name: Run `packer init`
         id: init
         run: packer init ./image.pkr.hcl
-
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          role-to-assume: ${{ secrets.PACKER_ROLE }}
+          aws-region: ${{ secrets.REGION }}
+          
       - name: Run `packer validate`
         id: validate
         run: |
