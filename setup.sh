@@ -155,7 +155,7 @@ sudo systemctl restart nginx
 # Relevant link: https://codingforentrepreneurs.com/blog/hello-linux-nginx-and-ufw-firewall
 #################################################################################################
 sudo ufw allow ssh
-sudo ufw allow "Nginx Full'
+sudo ufw allow "Nginx Full"
 sudo ufw enable
 
 # Print completion message
