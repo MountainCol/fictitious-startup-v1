@@ -81,7 +81,7 @@ source ~/cloudtalent_app/bin/activate
 #
 # Relevant link: https://realpython.com/what-is-pip/
 #################################################################################################
-python3 -m pip install -r $APP_DIR/cloudtalents/requirements.txt
+python3 -m pip install -r $APP_DIR/fictitious-startup-V1-1/requirements.txt
 
 # Apply Django migrations
 python3 $APP_DIR/manage.py makemigrations
