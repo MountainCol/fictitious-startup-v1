@@ -1,38 +1,43 @@
-# name: Cloud Talents Startup 
+name: app_deploy
 
-#on:
-#  push:
-#    branches: [ main ]
-#  pull_request:
+on:
+    workflow_dispatch:      # manual trigger
+        inputs:             # provide ami_version as an input
+            ami_version:
+                description: 'AMI version'
+                required: true
+jobs:
+    lapp_deploy:
+        name: app_deploy
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+              working-directory: terraform
+        steps:
 
-#env:
-#  AWS_REGION: "eu-west-1"
-#  PACKER_VERSION: "latest"
+            # Step 1 - Checkout Repository
+            - name: Checkout Repository
+              uses: actions/checkout@v4
 
+            # Step 2 - Install terraform '1.9.8'
+            - name: Terraform Workflow
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_version: "1.9.8"
+                cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}     # API_TOKEN for HCP Terrafom
 
-#permissions:
-#  contents: read
-#  id-token: write
+            # Step 3 - Terraform init
+            - name: Terraform Init
+              id: init
+              run: terraform init
 
-#jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#      
-#    steps:
-#      - name: Repositiry Checkout
-#        uses: actions/checkout@v4
-#      - name: Packer version
-#        uses: hashicorp/setup-packer@main
-#        id: setup
-#        with:
-#          version: ${{ env.PACKER_VERSION }}         
-#      - name: apply
-#        id: init
-#        run: "packer init ./image.pkr.hcl"
+            # Step 4 - Terraform plan
+            - name: Terraform Plan
+              id: plan
+              run: terraform plan -var "custom_ami_version=${{ inputs.ami_version }}" -no-color
+              continue-on-error: true
 
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v4
-#        with:
-#          audience: sts.amazonaws.com
-#          role-to-assume: ${{ secrets.PACKER_ROLE }}
-#          aws-region: ${{ secrets.REGION }}
+            # Step 5 - Terraform apply, set variable ami_version
+            - name: Terraform Apply
+              id: Apply
+              run: terraform apply -var "custom_ami_version=${{ inputs.ami_version }}" -auto-approve
