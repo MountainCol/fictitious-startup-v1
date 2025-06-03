@@ -22,6 +22,8 @@ resource "aws_security_group" "allow_http" {
     vpc_id      = data.terraform_remote_state.source.outputs.vpc_id
 }
 
+
+## AMI identification ##
 data "aws_ami" "cloudtalents-startup-latest-AMI" {
   executable_users = ["self"]
   most_recent      = true
