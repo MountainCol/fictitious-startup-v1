@@ -45,3 +45,50 @@ data "aws_ami" "cloudtalents-startup-latest-AMI" {
     values = ["hvm"]
   }
 }
+
+
+
+##################
+## EC2 Creation ##
+##################
+
+# EC2 #
+
+resource "aws_instance" "web" {
+    ami                                 = var.custom_ami_id
+    instance_type                       = "t2.micro"
+    subnet_id                           = aws_subnet.public_subnet.id 
+    security_groups                     = [aws_security_group.web_sg.id]
+    associate_public_ip_address         = true
+    vpc_security_group_ids              = [aws_security_group.allow_http.id]
+    iam_instance_profile                = aws_iam_instance_profile.instance_profile.name
+
+    tags                                =  {
+        Name = "Web-Server" 
+    }
+}
+
+# Security groups #
+
+resource "aws_security_group" "web_sg" {
+    name        = "allow_http"
+    description = "Allow HTTP inbound traffic and all outbound traffic"
+    vpc_id      = data.terraform_remote_state.source.outputs.vpc_id
+
+    ingress {
+      description   = "HTTP"
+      from_port     = 80
+      to_port       = 80
+      protocol      = "tcp"
+      cidr_blocks   = ["0.0.0.0/0"]
+    }
+
+    egress {
+      description     = "All outbound traffic"
+      from_port       = 0
+      to_port         = 0
+      protocol        = "-1"
+      cidr_blocks     = ["0.0.0.0/0"]
+    }
+}
+
