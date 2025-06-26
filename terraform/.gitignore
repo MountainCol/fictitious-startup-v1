@@ -1,0 +1,32 @@
+# Local .terraform directories
+**/.terraform/*
+!.terraform/*.tfstate
+.terraform/
+
+# .terraform.lock.hcl can be shared, but you can ignore if you prefer
+.terraform.lock.hcl 
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+
+# Ignore override files as they are usually local
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore plan output
+*.plan
+
+# Ignore backup files
+*.backup
+
+# OS generated files
+.DS_Store
+Thumbs.db
