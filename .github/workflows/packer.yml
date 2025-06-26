@@ -35,3 +35,6 @@ jobs:
       - name: Run Packer Build
         run: |
           packer build -var "app_version=${{ env.VERSION }}" .
+
+      - name: Set AMI Name
+        run: echo "AMI_NAME=cloudtalents-startup-${{ github.sha }}" >> $GITHUB_ENV
