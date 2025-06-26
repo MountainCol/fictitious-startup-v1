@@ -1,9 +1,10 @@
-terraform {
-  backend "remote" {
-    organization = "learn-terraform-aws-v2"
+terraform { 
+  cloud { 
+    
+    organization = "learn-terraform-aws-v2" 
 
-    workspaces {
-      name = "Week-4"
-    }
-  }
+    workspaces { 
+      name = "Week-4" 
+    } 
+  } 
 }
