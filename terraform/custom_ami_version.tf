@@ -1,4 +1,4 @@
-data "aws_ami" "" {
+data "aws_ami" "cloudtalents-startup-latest-AMI" {
   executable_users = ["self"]
   most_recent      = true
   name_regex       = "CloudTalents"
@@ -19,3 +19,4 @@ data "aws_ami" "" {
     values = ["hvm"]
   }
 }
+

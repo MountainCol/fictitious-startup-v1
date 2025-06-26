@@ -1,73 +1,37 @@
-name: packer
+name: Packer AMI Build
 
 on:
-  push:
-
-permissions:
-  id-token: write
-  contents: read
+  release:
+    types: [created]
 
 jobs:
-  packer:
+  build-ami:
+    name: Build AMI
     runs-on: ubuntu-latest
-    name: Run Packer
+
+    permissions:
+      id-token: write # Required for AWS OIDC authentication
+      contents: read
+
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Python dependencies
-        run: |
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-
-      - name: Setup `packer`
-        uses: hashicorp/setup-packer@main
-        id: setup
-        with:
-          version: 'latest'
-
-      - name: Run `packer init`
-        id: init
-        run: packer init ./image.pkr.hcl
-      
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          audience: sts.amazonaws.com
-          role-to-assume: ${{ secrets.PACKER_ROLE }}
-          aws-region: ${{ secrets.REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }} # Replace with your AWS role ARN secret
+          aws-region: ${{ secrets.AWS_REGION }} # Replace with your AWS region secret
 
-      - name: Run `packer validate`
-        id: validate
+      - name: Get Release Version
+        id: get_version
+        run: echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
+      - name: Setup Packer
+        uses: hashicorp/setup-packer@main
+        with:
+          version: "latest"
+
+      - name: Run Packer Build
         run: |
-          packer validate \
-            -var "subnet_id=${{ secrets.SUBNET_ID }}" \
-            -var "vpc_id=${{ secrets.VPC_ID }}" \
-            -var "version=${{ secrets.PRODUCT_VERSION }}" \
-          ./image.pkr.hcl
-      
-      - name: Build Packer Image
-        run: |
-          if [[ -z "${{ secrets.VPC_ID }}" ]]; then
-          echo "Error: Missing secret VPC_ID." >&2
-          exit 1
-          fi
-
-          if [[ -z "${{ secrets.SUBNET_ID }}" ]]; then
-          echo "Error: Missing secret SUBNET_ID." >&2
-          exit 1
-          fi
-          if [[ -z "${{ secrets.PRODUCT_VERSION }}" ]]; then
-          echo "Error: Missing secret PRODUCT_VERSION." >&2
-          exit 1
-          fi
-
-          echo "VPC ID: ${{ secrets.VPC_ID }}"
-          echo "Subnet ID: ${{ secrets.SUBNET_ID }}"
-          echo "Product Version: ${{ secrets.PRODUCT_VERSION }}"
-          packer build -on-error=abort \
-            -var "vpc_id=${{ secrets.VPC_ID }}" \
-            -var "subnet_id=${{ secrets.SUBNET_ID }}" \
-            -var "version=${{ secrets.PRODUCT_VERSION }}" \
-            ./image.pkr.hcl
+          packer build -var "app_version=${{ env.VERSION }}" .
