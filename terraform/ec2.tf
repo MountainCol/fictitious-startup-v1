@@ -1,6 +1,6 @@
 # EC2 #
 
-resource "aws_instance" "web" {
+resource "aws_instance" "web2" {
     ami                                 = data.aws_ami.ubuntu.id
     instance_type                       = "t2.micro"
     subnet_id                           = aws_subnet.public_subnet.id 
@@ -10,7 +10,7 @@ resource "aws_instance" "web" {
     iam_instance_profile                = aws_iam_instance_profile.instance_profile.name
 
     tags                                =  {
-        Name = "Web-Server" 
+        Name = "Web2-Server" 
     }
 }
 
