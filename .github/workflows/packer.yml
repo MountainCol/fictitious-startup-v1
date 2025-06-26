@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write # Required for AWS OIDC authentication
+      id-token: write 
       contents: read
 
     steps:
@@ -20,9 +20,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }} # Replace with your AWS role ARN secret
-          aws-region: ${{ secrets.AWS_REGION }} # Replace with your AWS region secret
-
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }} 
+          aws-region: ${{ secrets.AWS_REGION }} 
       - name: Get Release Version
         id: get_version
         run: echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
